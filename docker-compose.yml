@@ -1,0 +1,30 @@
+version: '2.1'
+services:
+  base:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      - DOTENV_PATH=.env
+  server:
+      extends: base
+      command: yarn start-live
+      environment:
+        - NODE_ENV=test
+      ports:
+        - 3000:3000
+        - 9000:9000
+      links:
+          - database
+      volumes:
+        - .:/server
+        - scaffold-node_modules:/server/node_modules
+  database:
+    image: postgres:9.6.5-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - scaffold-database:/var/lib/postgresql/data
+volumes:
+  scaffold-database:
+  scaffold-node_modules:
